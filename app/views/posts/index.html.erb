@@ -1,0 +1,42 @@
+
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Posts</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Content</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @posts.each do |post| %>
+      <tr>
+        <td><%= post.title %></td>
+        <td><%= post.content%></td>
+        <td><%= link_to 'Show', post %></td>
+        <td><%= link_to 'Edit', edit_post_path(post) %></td>
+        <td><%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <!-- <td><div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button"></div></td> -->
+        <td><img src="assets/facebook_button.png" alt="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('<%= post.title %>'),'facebook-share-dialog','width=626,height=436'); return false;"></td>
+
+        <td><img src="assets/twitter.png" alt="Share on Twitter" onclick="javascript:window.open('https://twitter.com/share?text=hello&amp;url=<%= post.title %>','Twitter-dialog','width=626,height=436'); return false;"></td>
+
+      
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+<% if current_user %>
+  Number of Friends: <%= current_user.friends_count %>
+  Number of likes: <%= current_user.likes %>
+  Number of shares: <%= current_user.shares %>
+  Number of comments: <%= current_user.comments %>
+<% end %>
+
+<%= link_to 'New Post', new_post_path %>
