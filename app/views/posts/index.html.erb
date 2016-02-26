@@ -1,5 +1,46 @@
+<div id="fb-root"></div>
+<script>
+  function share_to_fb(post_url, p_id) {
+    FB.init({
+      appId      : '1097221353655855',
+      xfbml      : true,
+      status     : true, // check the login status upon init?
+      cookie     : true,
+      version    : 'v2.5'
+    });
+    FB.ui(
+     {
+      display: 'popup',
+      method: 'share',
+      // action_type: 'og.likes',
+      href: post_url,
+      action_properties: JSON.stringify({
+      object:'http://timesofindia.indiatimes.com/world/china/The-next-world-war-will-be-in-the-South-China-Sea-Ask-Thucydides-/articleshow/51066126.cms',
+      })
+    }, function(response){
+      
+      var id_obj = response;
+      var post_id= id_obj.post_id;
 
-<p id="notice"><%= notice %></p>
+      $.ajax({
+        type: "POST",
+        url: "/posts/addPost_id",
+        data:  JSON.stringify({ 'id' : p_id, 'post_id' : post_id}), // the JSON data, as an object or string
+        contentType: "application/json",
+        dataType: "json",
+      });
+    });
+  };
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5&appId=925912020860859";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+
 
 <h1>Listing Posts</h1>
 
@@ -16,27 +57,25 @@
     <% @posts.each do |post| %>
       <tr>
         <td><%= post.title %></td>
-        <td><%= post.content%></td>
+        <td><%= post.id%></td>
         <td><%= link_to 'Show', post %></td>
         <td><%= link_to 'Edit', edit_post_path(post) %></td>
         <td><%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        <!-- <td><div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button"></div></td> -->
-        <td><img src="assets/facebook_button.png" alt="Share on Facebook" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('<%= post.title %>'),'facebook-share-dialog','width=626,height=436'); return false;"></td>
-
-        <td><img src="assets/twitter.png" alt="Share on Twitter" onclick="javascript:window.open('https://twitter.com/share?text=hello&amp;url=<%= post.title %>','Twitter-dialog','width=626,height=436'); return false;"></td>
-
-      
+        <% if current_user %>
+          <%if not post.post_id.nil? %>
+            <td>likes: <%= current_user.likes(post.post_id) %></td>
+            <td>comments: <%=current_user.comments(post.post_id)%></td>
+            <td>shares: <%=current_user.shares(post.post_id)%></td>
+          <% end %>
+        <% end %>
+        <td><img src="assets/facebook_button.png" alt="Share on Facebook" onclick= 'share_to_fb("<%= post.title %>","<%= post.id%>");'></td>
+       
       </tr>
     <% end %>
   </tbody>
 </table>
 
 <br>
-<% if current_user %>
-  Number of Friends: <%= current_user.friends_count %>
-  Number of likes: <%= current_user.likes %>
-  Number of shares: <%= current_user.shares %>
-  Number of comments: <%= current_user.comments %>
-<% end %>
+
 
 <%= link_to 'New Post', new_post_path %>

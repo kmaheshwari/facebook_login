@@ -5,6 +5,7 @@ class PostsController < ApplicationController
   # GET /posts.json
   def index
     @posts = Post.all
+    
   end
 
   # GET /posts/1
@@ -61,7 +62,16 @@ class PostsController < ApplicationController
     end
   end
 
-  private
+  def addPost_id
+    @post = Post.find(params[:id])
+    @post.update(post_id: params[:post_id], user_id: current_user.id)
+    respond_to do |format|
+      format.html
+      format.json
+    end
+  end
+
+  private 
     # Use callbacks to share common setup or constraints between actions.
     def set_post
       @post = Post.find(params[:id])

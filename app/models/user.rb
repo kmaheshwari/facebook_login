@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+	has_many :posts, dependent: :destroy
 
 	def self.from_omniauth(auth)
 	  where(provider: auth.provider, uid: auth.uid).first_or_initialize.tap do |user|
@@ -19,17 +20,22 @@ class User < ActiveRecord::Base
 		facebook.get_connection("me", "friends").size
 	end
 
-	def likes
-		facebook.get_object("966978620053068_968678173216446", :fields => "likes.summary(true)")["likes"]["summary"]["total_count"]
-		# post_kpis = facebook.get_connections(@post, 'insights', metric: 'post_storytellers_by_action_type').first["values"].first["value"]
+
+	def likes(post_id)
+		# facebook.get_object('966978620053068_971364312947832', :fields => "likes.summary(true)")["likes"]["summary"]["total_count"]
+		#full post id for user
+		fpost_id = uid + "_" + post_id
+		facebook.get_object(fpost_id, :fields => "likes.summary(true)")["likes"]["summary"]["total_count"]
+		
 	end
 
-	def shares
-		# facebook.get_object('966978620053068_968678173216446', :fields => "shares")["shares"]
-		facebook.get_object('/'+'966978620053068_968678173216446'+'/sharedposts?limit=10000&format=json').size
+	def shares(post_id)
+		fspost_id = uid + "_" + post_id
+		facebook.get_object('/'+fspost_id+'/sharedposts?limit=10000&format=json').size
 	end
 
-	def comments
-		facebook.get_object('966978620053068_968678173216446', :fields => "comments.summary(true)")["comments"]["summary"]["total_count"]
+	def comments(post_id)
+		fcpost_id = uid + "_" + post_id
+		facebook.get_object(fcpost_id, :fields => "comments.summary(true)")["comments"]["summary"]["total_count"]
 	end
 end

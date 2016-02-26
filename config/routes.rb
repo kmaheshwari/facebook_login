@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get 'auth/:provider/callback' => 'sessions#create'
   get 'auth/failure' => redirect('/')
   get 'signout', to: 'sessions#destroy', as: 'signout'
+  post 'posts/addPost_id' => 'posts#addPost_id'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
