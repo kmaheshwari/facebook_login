@@ -29,7 +29,7 @@ class User < ActiveRecord::Base
 		begin
 			facebook.get_object(fpost_id, :fields => "likes.summary(true)")["likes"]["summary"]["total_count"]
 		rescue
-			
+			return false
 		end
 		
 	end
@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
 		begin
 			facebook.get_object('/'+fspost_id+'/sharedposts?limit=10000&format=json').size
 		rescue
-
+			return false
 		end
 	end 
 
@@ -50,7 +50,7 @@ class User < ActiveRecord::Base
 		begin
 			facebook.get_object(fcpost_id, :fields => "comments.summary(true)")["comments"]["summary"]["total_count"]
 		rescue
-
+			return false
 		end
 	end
 end

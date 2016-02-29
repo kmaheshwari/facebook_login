@@ -63,9 +63,13 @@
         <td><%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
         <% if current_user %>
           <%if not post.post_id.nil? %>
-            <td>likes: <%= current_user.likes(post.post_id) %></td>
-            <td>comments: <%=current_user.comments(post.post_id)%></td>
-            <td>shares: <%=current_user.shares(post.post_id)%></td>
+            <%if not (current_user.likes(post.post_id) && current_user.comments(post.post_id) && current_user.shares(post.post_id))%>
+              <td>Post deleted from facebook</td>>
+            <%else%>
+              <td>likes: <%= current_user.likes(post.post_id) %></td>
+              <td>comments: <%=current_user.comments(post.post_id)%></td>
+              <td>shares: <%=current_user.shares(post.post_id)%></td>
+            <% end %>
           <% end %>
         <% end %>
         <td><img src="assets/facebook_button.png" alt="Share on Facebook" onclick= 'share_to_fb("<%= post.title %>","<%= post.id%>");'></td>
