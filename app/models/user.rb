@@ -24,18 +24,33 @@ class User < ActiveRecord::Base
 	def likes(post_id)
 		# facebook.get_object('966978620053068_971364312947832', :fields => "likes.summary(true)")["likes"]["summary"]["total_count"]
 		#full post id for user
-		fpost_id = uid + "_" + post_id
-		facebook.get_object(fpost_id, :fields => "likes.summary(true)")["likes"]["summary"]["total_count"]
+		fpost_id = ""
+		fpost_id = uid + "_"  + post_id
+		begin
+			facebook.get_object(fpost_id, :fields => "likes.summary(true)")["likes"]["summary"]["total_count"]
+		rescue
+			
+		end
 		
 	end
 
 	def shares(post_id)
+		fspost_id = ""
 		fspost_id = uid + "_" + post_id
-		facebook.get_object('/'+fspost_id+'/sharedposts?limit=10000&format=json').size
-	end
+		begin
+			facebook.get_object('/'+fspost_id+'/sharedposts?limit=10000&format=json').size
+		rescue
+
+		end
+	end 
 
 	def comments(post_id)
+		fcpost_id = ""
 		fcpost_id = uid + "_" + post_id
-		facebook.get_object(fcpost_id, :fields => "comments.summary(true)")["comments"]["summary"]["total_count"]
+		begin
+			facebook.get_object(fcpost_id, :fields => "comments.summary(true)")["comments"]["summary"]["total_count"]
+		rescue
+
+		end
 	end
 end
