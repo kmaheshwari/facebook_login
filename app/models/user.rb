@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
 	has_many :posts, dependent: :destroy
+	has_many :payments
 
 	def self.from_omniauth(auth)
 	  where(provider: auth.provider, uid: auth.uid).first_or_initialize.tap do |user|
@@ -26,9 +27,9 @@ class User < ActiveRecord::Base
 		#full post id for user
 		fpost_id = ""
 		fpost_id = uid + "_"  + post_id
-		begin
+		begin 
 			facebook.get_object(fpost_id, :fields => "likes.summary(true)")["likes"]["summary"]["total_count"]
-		rescue
+		rescue 
 			return false
 		end
 		
@@ -39,7 +40,7 @@ class User < ActiveRecord::Base
 		fspost_id = uid + "_" + post_id
 		begin
 			facebook.get_object('/'+fspost_id+'/sharedposts?limit=10000&format=json').size
-		rescue
+		rescue GraphMethodException
 			return false
 		end
 	end 
@@ -49,7 +50,7 @@ class User < ActiveRecord::Base
 		fcpost_id = uid + "_" + post_id
 		begin
 			facebook.get_object(fcpost_id, :fields => "comments.summary(true)")["comments"]["summary"]["total_count"]
-		rescue
+		rescue GraphMethodException
 			return false
 		end
 	end

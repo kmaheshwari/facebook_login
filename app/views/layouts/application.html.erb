@@ -7,12 +7,26 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
+<div id="fb-root"></div>
+<!--
+  Below we include the Login Button social plugin. This button uses
+  the JavaScript SDK to present a graphical Login button that triggers
+  the FB.login() function when clicked.
+-->
 
+Facebook SDK call
+<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+</fb:login-button>
+<div id="status">
+</div>
+<a href="/" onclick="fbLogout();">Logout</a>
 
-
+<br><br>
+Omniauth-facebook gem
 <div id="user_nav">
   <% if current_user %>
     Signed in as <strong><%= current_user.name %></strong>!
+
     <%= link_to "Sign out", signout_path, id: "sign_out" %>
   <% else %>
     <%= link_to "Sign in with Facebook", "/auth/facebook", id: "sign_in" %>

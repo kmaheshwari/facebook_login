@@ -1,10 +1,12 @@
 Rails.application.routes.draw do
   resources :posts
+  resources :payments
   root 'posts#index'
 
   get 'auth/:provider/callback' => 'sessions#create'
   get 'auth/failure' => redirect('/')
   get 'signout', to: 'sessions#destroy', as: 'signout'
+  #get 'payments', to: 'payment#new', as: 'payments'
   post 'posts/addPost_id' => 'posts#addPost_id'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
